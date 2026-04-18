@@ -1,0 +1,88 @@
+Index: sky-server/src/main/java/com/sky/mapper/DishMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sky-server/src/main/java/com/sky/mapper/DishMapper.java b/sky-server/src/main/java/com/sky/mapper/DishMapper.java
+--- a/sky-server/src/main/java/com/sky/mapper/DishMapper.java	
++++ b/sky-server/src/main/java/com/sky/mapper/DishMapper.java	(date 1772762339714)
+@@ -10,8 +10,6 @@
+ import org.apache.ibatis.annotations.Mapper;
+ import org.apache.ibatis.annotations.Select;
+ 
+-import java.util.List;
+-
+ @Mapper
+ public interface DishMapper {
+ 
+@@ -36,6 +34,4 @@
+ 
+   @AutoFill(value=OperationType.INSERT)
+     void update(Dish dish);
+-
+-    List<Dish> list(Dish dish);
+ }
+Index: sky-server/src/main/java/com/sky/mapper/SetmealMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sky-server/src/main/java/com/sky/mapper/SetmealMapper.java b/sky-server/src/main/java/com/sky/mapper/SetmealMapper.java
+--- a/sky-server/src/main/java/com/sky/mapper/SetmealMapper.java	
++++ b/sky-server/src/main/java/com/sky/mapper/SetmealMapper.java	(date 1772762339710)
+@@ -1,27 +1,17 @@
+ package com.sky.mapper;
+ 
+-import com.github.pagehelper.Page;
+-import com.sky.annotation.AutoFill;
+-import com.sky.dto.SetmealPageQueryDTO;
+-import com.sky.entity.Setmeal;
+-import com.sky.enumeration.OperationType;
+-import com.sky.vo.SetmealVO;
+-import org.apache.ibatis.annotations.Delete;
+ import org.apache.ibatis.annotations.Mapper;
+ import org.apache.ibatis.annotations.Select;
+ 
+ @Mapper
+ public interface SetmealMapper {
+-    @AutoFill(OperationType.INSERT)
+-    void insert(Setmeal setmeal);
+-
+-    Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+ 
+-    @Select("select * from setmeal where id = #{id}")
+-    Setmeal getById(Long id);
++    /**
++     * 根据分类id查询套餐的数量
++     * @param id
++     * @return
++     */
++    @Select("select count(id) from setmeal where category_id = #{categoryId}")
++    Integer countByCategoryId(Long id);
+ 
+-    @Delete("delete from setmeal where id = #{id}")
+-    void deleteById(Long setmealId);
+-
+-    void update(Setmeal setmeal);
+ }
+Index: sky-server/src/main/java/com/sky/mapper/SetMealDishMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/sky-server/src/main/java/com/sky/mapper/SetMealDishMapper.java b/sky-server/src/main/java/com/sky/mapper/SetMealDishMapper.java
+new file mode 100644
+--- /dev/null	(date 1772762339708)
++++ b/sky-server/src/main/java/com/sky/mapper/SetMealDishMapper.java	(date 1772762339708)
+@@ -0,0 +1,11 @@
++package com.sky.mapper;
++
++import org.apache.ibatis.annotations.Mapper;
++import org.apache.ibatis.annotations.Param;
++
++import java.util.List;
++
++@Mapper
++public interface SetMealDishMapper {
++    List<Long> getSetmealIdsByDishId(@Param("dishIds")List<Long> dishIds);
++}
